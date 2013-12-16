@@ -1,11 +1,12 @@
 package org.yong3.offheap.serialization.serializer;
 
-import static org.junit.Assert.*;
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.ComparisonFailure;
 import org.junit.Test;
+import org.yong3.offheap.serialization.MemoryAllocator;
 import org.yong3.offheap.serialization.MemoryAllocatorFactory;
 
 public class StringSerializerTest {
@@ -24,17 +25,33 @@ public class StringSerializerTest {
 		readAndWrite(null);
 		readAndWrite("");
 		readAndWrite("123456");
+		
+		for(int i = 0; i < 10000000; i++){
+			readAndWrite("" + i);
+		}
 	}
 	
 	private void readAndWrite(String s) {
 		int size = serializer.getOffheapSize(s);
-		long addr = MemoryAllocatorFactory.get().allocate(size);
+		MemoryAllocator allocator = MemoryAllocatorFactory.get();
+		long addr = allocator.allocate(size);
 		
 		int wSize = serializer.write(addr, s);
 		assertEquals(size, wSize);
 		
 		String r = serializer.read(addr, String.class);
-		assertEquals(s, r);
+		try{
+			assertEquals(s, r);
+		}catch(ComparisonFailure fail){
+			System.err.println(size);
+			for(int i = 0; i < size; i++){
+				System.err.print(Integer.toHexString(allocator.getByte(addr + i)));
+				System.err.print(' ');
+			}
+			throw fail;
+		}
+		
+		allocator.deallocate(addr);
 	}
 
 }
