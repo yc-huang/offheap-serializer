@@ -22,30 +22,42 @@ public class ObjectArraySerializerTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
-	public void testChars() throws InstantiationException {
-		char[] chars = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g' };
-		char[] rChars = (char[]) writeAndRead(chars);
-		assertArrayEquals(chars, rChars);
 
-		for (int i = 0; i < 100; i++) {
-			rChars = (char[]) writeAndRead(chars);
-			assertArrayEquals(chars, rChars);
+	@Test
+	public void testInts() throws InstantiationException {
+		System.err.println("in test int array");
+		int[] ints = new int[] { 1, 2, 3 };
+		int[] rInts = (int[]) writeAndRead(ints);
+		assertArrayEquals(ints, rInts);
+		
+		for(int i = 0; i < 1000000; i++){
+			rInts = (int[]) writeAndRead(ints);
+			assertArrayEquals(ints, rInts);
 		}
 	}
 
 	@Test
-	public void testInts() throws InstantiationException {
-		int[] ints = new int[] { 1, 2, 3 };
-		int[] rInts = (int[]) writeAndRead(ints);
-		assertArrayEquals(ints, rInts);
-	}
+	public void testChars() throws InstantiationException {
+		System.err.println("in test char array");
+		char[] chars = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', '*', '~', '汗', '魍'};
+		char[] rChars = (char[]) writeAndRead(chars);
+		assertArrayEquals(chars, rChars);
 
+		for (int i = 0; i < 1000000; i++) {
+			rChars = (char[]) writeAndRead(chars);
+			assertArrayEquals(chars, rChars);
+		}
+	}
+	
 	@Test
 	public void testBytes() throws InstantiationException {
 		byte[] in = new byte[] { 1, 2, 3 };
 		byte[] out = (byte[]) writeAndRead(in);
 		assertArrayEquals(in, out);
+		for (int i = 0; i < 1000000; i++) {
+			out = (byte[]) writeAndRead(in);
+			assertArrayEquals(in, out);
+		}
 	}
 
 	@Test
@@ -53,6 +65,10 @@ public class ObjectArraySerializerTest {
 		short[] in = new short[] { 1, 2, 3 };
 		short[] out = (short[]) writeAndRead(in);
 		assertArrayEquals(in, out);
+		for (int i = 0; i < 1000000; i++) {
+			out = (short[]) writeAndRead(in);
+			assertArrayEquals(in, out);
+		}
 	}
 
 	@Test
@@ -60,6 +76,10 @@ public class ObjectArraySerializerTest {
 		long[] in = new long[] { 1, 2, 3 };
 		long[] out = (long[]) writeAndRead(in);
 		assertArrayEquals(in, out);
+		for (int i = 0; i < 1000000; i++) {
+			out = (long[]) writeAndRead(in);
+			assertArrayEquals(in, out);
+		}
 	}
 
 	@Test
@@ -67,6 +87,10 @@ public class ObjectArraySerializerTest {
 		float[] in = new float[] { 1, 2, 3 };
 		float[] out = (float[]) writeAndRead(in);
 		assertArrayEquals(in, out, 0);
+		for (int i = 0; i < 1000000; i++) {
+			out = (float[]) writeAndRead(in);
+			assertArrayEquals(in, out, 0);
+		}
 	}
 
 	@Test
@@ -75,6 +99,11 @@ public class ObjectArraySerializerTest {
 		boolean[] out = (boolean[]) writeAndRead(in);
 		assertTrue(out[0]);
 		assertFalse(out[1]);
+		for (int i = 0; i < 1000000; i++) {
+			out = (boolean[]) writeAndRead(in);
+			assertTrue(out[0]);
+			assertFalse(out[1]);
+		}
 	}
 
 	@Test
@@ -82,6 +111,10 @@ public class ObjectArraySerializerTest {
 		double[] in = new double[] { 1, 2, 3 };
 		double[] out = (double[]) writeAndRead(in);
 		assertArrayEquals(in, out, 0);
+		for (int i = 0; i < 1000000; i++) {
+			out = (double[]) writeAndRead(in);
+			assertArrayEquals(in, out, 0);
+		}
 	}
 
 	@Test
@@ -112,8 +145,9 @@ public class ObjectArraySerializerTest {
 	private Object writeAndRead(Object o) {
 		// only support array
 		assertTrue(o.getClass().isArray());
+		//System.err.println("class:" + o.getClass());
 		Serializer serializer = SerializerFactory.get(o.getClass());
-
+		//System.err.println("get a serializer:" + serializer.getClass());
 		int size = serializer.getOffheapSize(o);
 		// System.err.println("allocate mem:" + size);
 		long addr = MemoryAllocatorFactory.get().allocate(size);
