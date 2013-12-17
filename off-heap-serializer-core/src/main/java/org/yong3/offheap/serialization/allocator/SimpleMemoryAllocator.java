@@ -20,6 +20,27 @@ public class SimpleMemoryAllocator implements MemoryAllocator {
 
 	public static final byte BYTE_BOOLEAN_TRUE = 1;
 	public static final byte BYTE_BOOLEAN_FALSE = 0;
+	
+	public static final int ARRAY_INT_INDEX_SCALE = Unsafe.ARRAY_INT_INDEX_SCALE;
+	public static final int ARRAY_SHORT_INDEX_SCALE = Unsafe.ARRAY_SHORT_INDEX_SCALE;
+	public static final int ARRAY_BYTE_INDEX_SCALE = Unsafe.ARRAY_BYTE_INDEX_SCALE;
+	public static final int ARRAY_CHAR_INDEX_SCALE = Unsafe.ARRAY_CHAR_INDEX_SCALE;
+	public static final int ARRAY_FLOAT_INDEX_SCALE = Unsafe.ARRAY_FLOAT_INDEX_SCALE;
+	public static final int ARRAY_LONG_INDEX_SCALE = Unsafe.ARRAY_LONG_INDEX_SCALE;
+	public static final int ARRAY_DOUBLE_INDEX_SCALE = Unsafe.ARRAY_DOUBLE_INDEX_SCALE;
+	public static final int ARRAY_BOOLEAN_INDEX_SCALE = Unsafe.ARRAY_BOOLEAN_INDEX_SCALE;
+	public static final int ARRAY_OBJECT_INDEX_SCALE = Unsafe.ARRAY_OBJECT_INDEX_SCALE;
+	
+	public static final int ARRAY_INT_BASE_OFFSET = Unsafe.ARRAY_INT_BASE_OFFSET;
+	public static final int ARRAY_BYTE_BASE_OFFSET = Unsafe.ARRAY_BYTE_BASE_OFFSET;
+	public static final int ARRAY_BOOLEAN_BASE_OFFSET = Unsafe.ARRAY_BOOLEAN_BASE_OFFSET;
+	public static final int ARRAY_SHORT_BASE_OFFSET = Unsafe.ARRAY_SHORT_BASE_OFFSET;
+	public static final int ARRAY_CHAR_BASE_OFFSET = Unsafe.ARRAY_CHAR_BASE_OFFSET;
+	public static final int ARRAY_LONG_BASE_OFFSET = Unsafe.ARRAY_LONG_BASE_OFFSET;
+	public static final int ARRAY_DOUBLE_BASE_OFFSET = Unsafe.ARRAY_DOUBLE_BASE_OFFSET;
+	public static final int ARRAY_FLOAT_BASE_OFFSET = Unsafe.ARRAY_FLOAT_BASE_OFFSET;
+	public static final int ARRAY_OBJECT_BASE_OFFSET = Unsafe.ARRAY_OBJECT_BASE_OFFSET;
+	
 
 	public long allocate(long size) {
 		return unsafe.allocateMemory(size);
@@ -100,85 +121,133 @@ public class SimpleMemoryAllocator implements MemoryAllocator {
 		return unsafe.getDouble(addr);
 	}
 
-//	public int putIntArray(long addr, int[] v) {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
-//
-//	public int putLongArray(long addr, long[] v) {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
-//
-//	public int putByteArray(long addr, byte[] v) {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
-//
-//	public int putBooleanArray(long addr, boolean[] v) {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
-//
-//	public int putCharArray(long addr, char[] v) {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
-//
-//	public int putShortArray(long addr, short[] v) {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
-//
-//	public int putFloatArray(long addr, float[] v) {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
-//
-//	public int putDoubleArray(long addr, double[] v) {
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
-//
-//	public int[] getIntArray(long addr) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	public long[] getLongArray(long addr) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	public byte[] getByteArray(long addr) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	public boolean[] getBooleanArray(long addr) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	public char[] getCharArray(long addr) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	public short[] getShortArray(long addr) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	public float[] getFloatArray(long addr) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	public double[] getDoubleArray(long addr) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	public int putIntArray(long addr, int[] v) {
+		int arrayLen = v.length;
+		unsafe.putInt(addr, arrayLen);
+		int len = ARRAY_INT_INDEX_SCALE * arrayLen;
+		unsafe.copyMemory(v, ARRAY_INT_BASE_OFFSET, null, addr + SIZE_OF_INT, len);
+		return len + SIZE_OF_INT;
+	}
+
+	public int putLongArray(long addr, long[] v) {
+		int arrayLen = v.length;
+		unsafe.putInt(addr, arrayLen);
+		int len = ARRAY_LONG_INDEX_SCALE * arrayLen;
+		unsafe.copyMemory(v, ARRAY_LONG_BASE_OFFSET, null, addr + SIZE_OF_INT, len);
+		return len + SIZE_OF_INT;
+	}
+
+	public int putByteArray(long addr, byte[] v) {
+		int arrayLen = v.length;
+		unsafe.putInt(addr, arrayLen);
+		int len = ARRAY_BYTE_INDEX_SCALE * arrayLen;
+		unsafe.copyMemory(v, ARRAY_BYTE_BASE_OFFSET, null, addr + SIZE_OF_INT, len);
+		return len + SIZE_OF_INT;
+	}
+
+	public int putBooleanArray(long addr, boolean[] v) {
+		int arrayLen = v.length;
+		unsafe.putInt(addr, arrayLen);
+		int len = ARRAY_BOOLEAN_INDEX_SCALE * arrayLen;
+		unsafe.copyMemory(v, ARRAY_BOOLEAN_BASE_OFFSET, null, addr + SIZE_OF_INT, len);
+		return len + SIZE_OF_INT;
+	}
+
+	public int putCharArray(long addr, char[] v) {
+		int arrayLen = v.length;
+		unsafe.putInt(addr, arrayLen);
+		int len = ARRAY_CHAR_INDEX_SCALE * arrayLen;
+		unsafe.copyMemory(v, ARRAY_CHAR_BASE_OFFSET, null, addr + SIZE_OF_INT, len);
+		return len + SIZE_OF_INT;
+	}
+
+	public int putShortArray(long addr, short[] v) {
+		int arrayLen = v.length;
+		unsafe.putInt(addr, arrayLen);
+		int len = ARRAY_SHORT_INDEX_SCALE * arrayLen;
+		unsafe.copyMemory(v, ARRAY_SHORT_BASE_OFFSET, null, addr + SIZE_OF_INT, len);
+		return len + SIZE_OF_INT;
+	}
+
+	public int putFloatArray(long addr, float[] v) {
+		int arrayLen = v.length;
+		unsafe.putInt(addr, arrayLen);
+		int len = ARRAY_FLOAT_INDEX_SCALE * arrayLen;
+		unsafe.copyMemory(v, ARRAY_FLOAT_BASE_OFFSET, null, addr + SIZE_OF_INT, len);
+		return len + SIZE_OF_INT;
+	}
+
+	public int putDoubleArray(long addr, double[] v) {
+		int arrayLen = v.length;
+		unsafe.putInt(addr, arrayLen);
+		int len = ARRAY_DOUBLE_INDEX_SCALE * arrayLen;
+		unsafe.copyMemory(v, ARRAY_DOUBLE_BASE_OFFSET, null, addr + SIZE_OF_INT, len);
+		return len + SIZE_OF_INT;
+	}
+
+	public int[] getIntArray(long addr) {
+		int len = unsafe.getInt(addr);
+		int[] ret = new int[len];
+		int bytes = ARRAY_INT_INDEX_SCALE * len;
+		unsafe.copyMemory(null,addr + SIZE_OF_INT, ret, ARRAY_INT_BASE_OFFSET, bytes);
+		return ret;
+	}
+
+	public long[] getLongArray(long addr) {
+		int len = unsafe.getInt(addr);
+		long[] ret = new long[len];
+		int bytes = ARRAY_LONG_INDEX_SCALE * len;
+		unsafe.copyMemory(null,addr + SIZE_OF_INT, ret, ARRAY_LONG_BASE_OFFSET, bytes);
+		return ret;
+	}
+
+	public byte[] getByteArray(long addr) {
+		int len = unsafe.getInt(addr);
+		byte[] ret = new byte[len];
+		int bytes = ARRAY_BYTE_INDEX_SCALE * len;
+		unsafe.copyMemory(null,addr + SIZE_OF_INT, ret, ARRAY_BYTE_BASE_OFFSET, bytes);
+		return ret;
+	}
+
+	public boolean[] getBooleanArray(long addr) {
+		int len = unsafe.getInt(addr);
+		boolean[] ret = new boolean[len];
+		int bytes = ARRAY_BYTE_INDEX_SCALE * len;
+		unsafe.copyMemory(null,addr + SIZE_OF_INT, ret, ARRAY_BYTE_BASE_OFFSET, bytes);
+		return ret;
+	}
+
+	public char[] getCharArray(long addr) {
+		int len = unsafe.getInt(addr);
+		char[] ret = new char[len];
+		int bytes = ARRAY_CHAR_INDEX_SCALE * len;
+		if(len > 0) unsafe.copyMemory(null,addr + SIZE_OF_INT, ret, ARRAY_CHAR_BASE_OFFSET, bytes);
+		return ret;
+	}
+
+	public short[] getShortArray(long addr) {
+		int len = unsafe.getInt(addr);
+		short[] ret = new short[len];
+		int bytes = ARRAY_SHORT_INDEX_SCALE * len;
+		unsafe.copyMemory(null,addr + SIZE_OF_INT, ret, ARRAY_SHORT_BASE_OFFSET, bytes);
+		return ret;
+	}
+
+	public float[] getFloatArray(long addr) {
+		int len = unsafe.getInt(addr);
+		float[] ret = new float[len];
+		int bytes = ARRAY_FLOAT_INDEX_SCALE * len;
+		unsafe.copyMemory(null,addr + SIZE_OF_INT, ret, ARRAY_FLOAT_BASE_OFFSET, bytes);
+		return ret;
+	}
+
+	public double[] getDoubleArray(long addr) {
+		int len = unsafe.getInt(addr);
+		double[] ret = new double[len];
+		int bytes = ARRAY_DOUBLE_INDEX_SCALE * len;
+		unsafe.copyMemory(null,addr + SIZE_OF_INT, ret, ARRAY_DOUBLE_BASE_OFFSET, bytes);
+		return ret;
+	}
 
 	public boolean isFixLength(Class cls) {
 		if (cls.isPrimitive())

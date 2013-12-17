@@ -47,14 +47,14 @@ public interface MemoryAllocator {
 	public int putFloat(long addr, float v);
 	public int putDouble(long addr, double v);
 
-//	public int putIntArray(long addr, int[] v);
-//	public int putLongArray(long addr, long[] v);
-//	public int putByteArray(long addr, byte[] v);
-//	public int putBooleanArray(long addr, boolean[] v);
-//	public int putCharArray(long addr, char[] v);
-//	public int putShortArray(long addr, short[] v);
-//	public int putFloatArray(long addr, float[] v);
-//	public int putDoubleArray(long addr, double[] v);
+	public int putIntArray(long addr, int[] v);
+	public int putLongArray(long addr, long[] v);
+	public int putByteArray(long addr, byte[] v);
+	public int putBooleanArray(long addr, boolean[] v);
+	public int putCharArray(long addr, char[] v);
+	public int putShortArray(long addr, short[] v);
+	public int putFloatArray(long addr, float[] v);
+	public int putDoubleArray(long addr, double[] v);
 	
 	/**
 	 * read a primitive value from given off-heap memory address.
@@ -71,14 +71,14 @@ public interface MemoryAllocator {
 	public double getDouble(long addr);
 
 	
-//	public int[] getIntArray(long addr);
-//	public long[] getLongArray(long addr);
-//	public byte[] getByteArray(long addr);
-//	public boolean[] getBooleanArray(long addr);
-//	public char[] getCharArray(long addr);
-//	public short[] getShortArray(long addr);
-//	public float[] getFloatArray(long addr);
-//	public double[] getDoubleArray(long addr);
+	public int[] getIntArray(long addr);
+	public long[] getLongArray(long addr);
+	public byte[] getByteArray(long addr);
+	public boolean[] getBooleanArray(long addr);
+	public char[] getCharArray(long addr);
+	public short[] getShortArray(long addr);
+	public float[] getFloatArray(long addr);
+	public double[] getDoubleArray(long addr);
 	
 	//test if a class will be serialized as fixed size
 	public boolean isFixLength(Class cls);
