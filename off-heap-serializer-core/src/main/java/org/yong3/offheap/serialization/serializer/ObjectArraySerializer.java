@@ -42,9 +42,9 @@ public class ObjectArraySerializer<V> extends BaseObjectSerializer<V> {
 		//} else {
 			for (int i = 0; i < len; i++) {
 				size += serializer.getOffheapSize(Array.get(instance, i));
-		//	}
+			}
 
-		}
+//		}
 		return size;
 	}
 
