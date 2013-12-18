@@ -5,7 +5,7 @@ A simple library which can serialize any POJO to be stored at offheap memory.
 
 ##Sample Usage:
 
-#serialize a POJO to off-heap:
+###serialize a POJO to off-heap:
     Serializer<String> serializer = SerializerFactory.get(String.class);
     MemoryAllocator allocator = MemoryAllocatorFactory.get();
     
