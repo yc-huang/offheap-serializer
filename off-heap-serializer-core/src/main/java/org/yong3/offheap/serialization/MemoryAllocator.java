@@ -26,6 +26,26 @@ public interface MemoryAllocator {
 	 */
 	public long allocate(long size);
 	
+
+	/**
+	 * change the block of memory at given address to the specified size.
+	 * 
+	 * @param address
+	 *            off-heap address of a memory block
+	 * @param size
+	 *            new size, in bytes
+	 * @return absolute off-heap address, but might not the same as what
+	 *         unsafe.allocateMemory returned
+	 *         
+	 * @throws IllegalArgumentException
+	 *             if the size is negative or too large for the native size_t
+	 *             type
+	 * 
+	 * @throws OutOfMemoryError
+	 *             if the allocation is refused by the system
+	 */
+	public long reallocate(long address, long size);
+	
 	/**
 	 * free memory block represent by given address.
 	 * @param address

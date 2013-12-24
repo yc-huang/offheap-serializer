@@ -46,6 +46,10 @@ public class SimpleMemoryAllocator implements MemoryAllocator {
 		return unsafe.allocateMemory(size);
 	}
 	
+	public long reallocate(long address, long size){
+		return unsafe.reallocateMemory(address, size);
+	}
+	
 	public void deallocate(long address){
 		unsafe.freeMemory(address);
 	}
