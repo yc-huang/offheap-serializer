@@ -1,37 +1,79 @@
 package org.yong3.offheap.serialization.serializer;
 
+import org.yong3.offheap.serialization.OffheapUtils;
+import org.yong3.offheap.serialization.Serializer;
 import org.yong3.offheap.serialization.SerializerFactory;
 
-public class StringSerializer extends BaseObjectSerializer<String> {
-	final static boolean COMPACT = false;
-	CharArraySerializer charArraySerializer = (CharArraySerializer) SerializerFactory
+import sun.misc.Unsafe;
+
+public class StringSerializer implements Serializer<String> {
+	// store as byte[] is more compact as char[]
+	final static boolean COMPACT = true;
+	protected static CharArraySerializer charArraySerializer = (CharArraySerializer) SerializerFactory
 			.get(char[].class);
-	ByteArraySerializer byteArraySerializer = (ByteArraySerializer) SerializerFactory
+	protected static ByteArraySerializer byteArraySerializer = (ByteArraySerializer) SerializerFactory
 			.get(byte[].class);
+	protected static Unsafe unsafe;
+	protected static long valueOffset;
 
-	public int getNotNullObjectSize(String instance) {
-		return (COMPACT) ? byteArraySerializer.getNotNullObjectSize(instance
-				.getBytes()) : charArraySerializer
-				.getNotNullObjectSize(instance.toCharArray());
+	static {
+		try {
+			unsafe = OffheapUtils.unsafe;
+			valueOffset = unsafe.objectFieldOffset(String.class
+					.getDeclaredField("value"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	protected int writeNotNullObjectSize(long address, String instance) {
-		return (COMPACT) ? byteArraySerializer.writeNotNullObjectSize(address,
-				instance.getBytes()) : charArraySerializer
-				.writeNotNullObjectSize(address, instance.toCharArray());
+	public int getOffheapSize(String instance) {
+		if (COMPACT) {
+			return byteArraySerializer
+					.getOffheapSize((instance != null) ? instance.getBytes()
+							: null);
+		} else {
+			return charArraySerializer
+					.getOffheapSize((instance != null) ? instance.toCharArray()
+							: null);
+		}
 	}
 
 	@Override
-	protected String readNotNullObject(long address, String instance) {
-		return (COMPACT) ? new String(byteArraySerializer.readNotNullObject(
-				address, null)) : new String(
-				charArraySerializer.readNotNullObject(address, null));
+	public int write(long address, String instance) {
+		if (COMPACT) {
+			return byteArraySerializer.write(address,
+					(instance != null) ? instance.getBytes() : null);
+		} else {
+			return charArraySerializer.write(address,
+					(instance != null) ? instance.toCharArray() : null);
+		}
 	}
 
 	@Override
-	protected String newInstance(Class<String> cls) {
-		return null;
+	public String read(long addr, Class<String> cls) {
+		if (COMPACT) {
+			byte[] bytes = byteArraySerializer.read(addr, (byte[]) null);
+			return (bytes != null) ? new String(bytes) : null;
+		} else {
+			char[] chars = charArraySerializer.read(addr, (char[]) null);
+			if (chars != null) {
+				String s = null;
+				try {
+					s = (String) unsafe.allocateInstance(String.class);
+				} catch (InstantiationException e) {
+				}
+				unsafe.putObject(s, valueOffset, chars);
+				return s;
+			} else {
+				return null;
+			}
+		}
+	}
+
+	@Override
+	public String read(long addr, String stub) throws InstantiationException {
+		return read(addr, String.class);
 	}
 
 }
