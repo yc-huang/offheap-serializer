@@ -9,9 +9,9 @@ import sun.misc.Unsafe;
 public class StringSerializer implements Serializer<String> {
 	// store as byte[] is more compact as char[]
 	final static boolean COMPACT = true;
-	protected static CharArraySerializer charArraySerializer = (CharArraySerializer) SerializerFactory
+	protected static Serializer<char[]> charArraySerializer = SerializerFactory
 			.get(char[].class);
-	protected static ByteArraySerializer byteArraySerializer = (ByteArraySerializer) SerializerFactory
+	protected static Serializer<byte[]> byteArraySerializer = SerializerFactory
 			.get(byte[].class);
 	protected static Unsafe unsafe;
 	protected static long valueOffset;
@@ -24,6 +24,7 @@ public class StringSerializer implements Serializer<String> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.err.println(byteArraySerializer.getClass());
 	}
 
 	@Override
@@ -52,28 +53,28 @@ public class StringSerializer implements Serializer<String> {
 
 	@Override
 	public String read(long addr, Class<String> cls) {
-		if (COMPACT) {
-			byte[] bytes = byteArraySerializer.read(addr, (byte[]) null);
-			return (bytes != null) ? new String(bytes) : null;
-		} else {
-			char[] chars = charArraySerializer.read(addr, (char[]) null);
-			if (chars != null) {
-				String s = null;
-				try {
-					s = (String) unsafe.allocateInstance(String.class);
-				} catch (InstantiationException e) {
-				}
-				unsafe.putObject(s, valueOffset, chars);
-				return s;
-			} else {
-				return null;
-			}
-		}
+		return read(addr, (String)null);
 	}
 
 	@Override
-	public String read(long addr, String stub) throws InstantiationException {
-		return read(addr, String.class);
+	public String read(long addr, String stub) {
+		try {
+			if (COMPACT) {
+				byte[] bytes = byteArraySerializer.read(addr, byte[].class);
+				return (bytes != null) ? new String(bytes) : null;
+			} else {
+				char[] chars = charArraySerializer.read(addr, char[].class);
+				if (chars != null) {
+					if(stub == null) stub = (String) unsafe.allocateInstance(String.class);
+					unsafe.putObject(stub, valueOffset, chars);
+					return stub;
+				} else {
+					return null;
+				}
+			}
+		} catch (InstantiationException e) {
+			return null;
+		}
 	}
 
 }
