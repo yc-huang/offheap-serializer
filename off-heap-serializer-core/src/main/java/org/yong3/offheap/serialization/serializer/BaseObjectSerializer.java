@@ -17,7 +17,7 @@ import sun.misc.Unsafe;
 @SuppressWarnings({"restriction", "unchecked"})
 public abstract class BaseObjectSerializer<V> implements Serializer<V> {
 	protected static MemoryAllocator allocator = MemoryAllocatorFactory.get();
-	protected static final int SIZE_OF_NULL_FLAG = allocator.sizeOf(true);
+	protected static final int SIZE_OF_NULL_FLAG = allocator.fixSizeOf(boolean.class);
 
 	protected static Unsafe unsafe = OffheapUtils.unsafe;
 
