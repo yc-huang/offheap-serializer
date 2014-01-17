@@ -34,9 +34,8 @@ public class SerializerFactory {
 	 */
 	static private Map<Type, Serializer> serializerMap = new HashMap<Type, Serializer>(
 			32);
-
-	static {
-		put(String.class, new StringSerializer());
+	
+	static{
 		put(int[].class, new IntArraySerializer());
 		put(byte[].class, new ByteArraySerializer());
 		put(boolean[].class, new BooleanArraySerializer());
@@ -45,6 +44,8 @@ public class SerializerFactory {
 		put(float[].class, new FloatArraySerializer());
 		put(long[].class, new LongArraySerializer());
 		put(double[].class, new DoubleArraySerializer());
+		
+		put(String.class, new StringSerializer());
 	}
 
 	/**
@@ -56,7 +57,6 @@ public class SerializerFactory {
 	public static <T> Serializer<T> get(Class<T> cls) {
 		Serializer<T> serializer = serializerMap.get(cls);
 		if (serializer == null) {
-
 			if (cls.isArray()) {
 				serializer = new ObjectArraySerializer(cls);
 			} else if (OffheapObject.class.isAssignableFrom(cls)) {
