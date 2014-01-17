@@ -37,6 +37,14 @@ public class SerializerFactory {
 
 	static {
 		put(String.class, new StringSerializer());
+		put(int[].class, new IntArraySerializer());
+		put(byte[].class, new ByteArraySerializer());
+		put(boolean[].class, new BooleanArraySerializer());
+		put(char[].class, new CharArraySerializer());
+		put(short[].class, new ShortArraySerializer());
+		put(float[].class, new FloatArraySerializer());
+		put(long[].class, new LongArraySerializer());
+		put(double[].class, new DoubleArraySerializer());
 	}
 
 	/**
@@ -50,25 +58,7 @@ public class SerializerFactory {
 		if (serializer == null) {
 
 			if (cls.isArray()) {
-				Class componentType = cls.getComponentType();
-				if (componentType == char.class)
-					serializer = (Serializer<T>) new CharArraySerializer();
-				else if (componentType == int.class)
-					serializer = (Serializer<T>) new IntArraySerializer();
-				else if (componentType == byte.class)
-					serializer = (Serializer<T>) new ByteArraySerializer();
-				else if (componentType == short.class)
-					serializer = (Serializer<T>) new ShortArraySerializer();
-				else if (componentType == long.class)
-					serializer = (Serializer<T>) new LongArraySerializer();
-				else if (componentType == float.class)
-					serializer = (Serializer<T>) new FloatArraySerializer();
-				else if (componentType == boolean.class)
-					serializer = (Serializer<T>) new BooleanArraySerializer();
-				else if (componentType == double.class)
-					serializer = (Serializer<T>) new DoubleArraySerializer();
-				else
-					serializer = new ObjectArraySerializer(cls);
+				serializer = new ObjectArraySerializer(cls);
 			} else if (OffheapObject.class.isAssignableFrom(cls)) {
 				serializer = new OffheapObjectSerializer();
 			} else {
